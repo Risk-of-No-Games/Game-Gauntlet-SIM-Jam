@@ -1,127 +1,88 @@
-![Package Icon](/addons/maaacks_game_template/media/game-icon-black-transparent-256x256.png)  
+# Heist Boss Simulator — One-Page GDD
 
-# Godot Game Template
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Maaack/Godot-Game-Template)
-![GitHub Release Date](https://img.shields.io/github/release-date/Maaack/Godot-Game-Template)
-[![Discord members](https://img.shields.io/discord/772191827570720798.svg?label=&logo=discord&logoColor=ffffff)](https://discord.gg/AyZrJh5AMp)  
+> **Pitch:** You owe a crime boss money. Pick a heist, hire a crew of randomly generated misfits, plan the job on a timeline, then watch it play out in real time and manage the chaos as it unfolds. FTL-style pause-and-react, RimWorld-style quirks, top-down view.
 
-This template has a main menu, options menus, pause menu, credits, scene loader, extra tools, and an example game scene.  
+**Core fantasy / lightbulb moment:** The heist succeeds *despite* the chaos, either because of a thorough plan or because you rolled with the punches.
+**References:** FTL (pause and manage chaos), RimWorld (quirks, top-down readability).
+**Story:** Minimal. The boss and the debt exist only as pressure.
 
-For *Godot 4.7* (4.4+ compatible)
+> Items marked *(proposed)* are recommendations from the design chat that haven't been confirmed. Treat them as tunable.
 
-[Example on itch.io](https://maaack.itch.io/godot-game-template)  
+---
 
-## Objective
+## Core Loop
 
-Setup menus and accessibility features in about 15 minutes.
+**Contract → Shop & Hire → Plan → Execute → Payout / Loss → Reputation update → repeat**
 
-The template can be the start of a new project, or plug into an existing one. It is game agnostic (2D or 3D) and can work with multiple target resolutions, up to 4k and down to 640x360. It's meant to cover the needs for a typical game jam, while remaining scalable and extensible enough to support commercial games.
+A run ends when you have no money left. Runs are independent.
 
-### Minimal
+---
 
-Users that want a minimal set of features can try *[Maaack's Minimal Game Template](https://github.com/Maaack/Godot-Minimal-Game-Template)* or other options from the [plugin suite](/addons/maaacks_game_template/docs/PluginSuite.md).  
+## Core Systems
 
-## Installation
+### 1. Run Economy
+- Money is your health. Crew fees and shop purchases are paid **up front** as flat fees *(proposed)*.
+- **Profit = take − crew cost − shop spend.** A heist isn't pass/fail: you either made money or lost it.
+- **$0 means the run is over.**
+- **Escalation:** spend more to make more. Bigger investments unlock bigger heists with more crew, more rooms and bigger payouts.
+- Boss debt: a fixed total, with a payment due every N heists *(proposed; endless mode is the alternative)*.
 
-*Maaack's Game Template* is available in both the *Godot Asset Library* and the *Godot Asset Store*. It is available as both a template and a plugin, meaning it can be used to start a new project, or added to an existing project.
+### 2. Heist Contract
+- **MVP locations:** House, Museum, Bank (in rising difficulty).
+- **Robbery Info** is randomized but drawn from each location's own pool of sections (e.g., House: dog, safe, laptops; Museum: lasers, alarms, cameras, guards; Bank: huge safe, gold bars, armed guards).
+- Each location type defines a **task template** of abstract tasks (e.g., Bank: Entry → Bypass Security → Breach Vault → Grab Loot → Exit) *(proposed)*.
+- **The player plans blind.** Intel and the task template are visible; the map layout isn't.
 
-### New Project
-While in the *Godot Project Manager*:
+### 3. Crew
+- Roles are offered **randomly** each heist, so the same location can be robbed in different ways depending on who's available.
+- Each role slot offers **3 randomly generated prospects** with varying cost, stats and quirks.
+- **Roles unlock methods.** Some tasks need a specific role. General tasks can be done by anyone, with a time penalty. (Example: Safe Blaster = fast and loud, Lock Picker = slow and quiet, anyone else = brute force with a penalty.)
+- Stats: 3–4 simple ones that affect task speed and success *(proposed: Speed, Stealth, Muscle, Smarts)*.
+- Quirks: RimWorld-style traits that interact with rooms and events, both good and bad.
+- Crew don't carry over, but the same people can show up for hire again.
+- Role pool (draft): Muscle, Hacker, Demolitionist, Tunneler, Contortionist, Master of Disguise, Plant, Lock Picker, Burglar, Decoy, Forger, Arsonist, Lookout, Hypnotist, Gambler, Getaway Driver, Safe Blaster.
 
-1.  Go to the **Asset Store** tab.
-2.  Search for "Maaack's Game Template".
-3.  Click on the result to open the template details.
-4.  Click to **Download**.
-5.  Give the project a new name and destination.
-6.  Click to **Install & Edit**.
-7.  Continue with the [Basic Setup](/addons/maaacks_game_template/docs/BasicSetup.md).
+### 4. Shop
+- Sells the gear, tools and intel the heist calls for (drills, disguises, schematics, etc.). Items unlock methods or reduce penalties.
 
-### Existing Project
-While editing a project in *Godot*:
+### 5. Plan Phase
+- **One timeline per crew member.** You drag abstract tasks onto the timelines.
+- Every crew member needs an **Entry task** and an **Exit task**.
+- Task duration depends on role and stats. Tasks can depend on each other (vault after alarm) *(proposed)*.
+- The plan timeline uses the same clock as the execution timer.
 
-1.  Go to the **Asset Store** tab.
-2.  Search for "Maaack's Game Template Addon".
-3.  Click on the result to open the plugin details.
-4.  Click to **Download**.
-5.  Check that contents are getting installed to `addons/` and if there are any conflicts.  
-Conflicts that are safe to ignore:
-    -  `addons/plugin_updater/`
-    -  `addons/clean_copy_examples/`
-    -  `addons/maaacks_scene_loader/`
-    -  `addons/maaacks_music_controller/`
-    -  `addons/maaacks_ui_sound_controller/`
-6.  Click to **Install**.
-7.  Reload the project (you may see errors before you do this).
-8.  Enable the plugin(s) from the **Project > Project Settings > Plugins** tab.  
-    1.  Optionally, enable the following:
-        -  *Plugin Updater*
-        -  *Maaack's Scene Loader*
-        -  *Maaack's Music Controller*
-        -  *Maaack's UI Sound Controller*
-    2.  Enable *Maaack's Game Template*.
-    3.  If it's enabled for the first time, the setup wizard will start.  
-        Close the window behind it and complete the setup wizard.  
-9.  Continue with the [Basic Setup](/addons/maaacks_game_template/docs/BasicSetup.md).
+### 6. Execution Phase
+- **Real time with pause.** The location is **procedurally generated** as a top-down room map with crew, NPCs (guards, civilians) and objectives.
+- Abstract plan tasks are mapped onto real rooms and objects. **The gap between plan and reality is where the chaos comes from.**
+- Crew follow their timelines until you step in. You can pause and **reassign or send crew** to improvise or do extra jobs *(proposed)*.
+- Rooms interact with crew roles and quirks.
+- Chaos sources for MVP *(proposed)*: guard patrols, escalating alarms, quirks misfiring.
+- **Timer hits 0 → police arrive.** Loot carried out the exit is banked. Anything (or anyone) still inside is lost or caught *(proposed)*.
 
-## Usage
+### 7. Push-Your-Luck Loot
+- Extra loot beyond the plan is scattered around the map. Grabbing it costs time and exposure.
+- This is the central tension of execution: **stick to the plan or get greedy.**
 
-[Basic Setup](/addons/maaacks_game_template/docs/BasicSetup.md) is done through the setup wizard at **Project > Tools > Run Maaack's Game Template Setup...**.  
+### 8. Reputation (Notoriety)
+- Injured, killed or abandoned crew lower your reputation.
+- Low reputation means **worse crew pools** ("people don't want to work with a bad planner").
 
-As part of setup, example scenes are copied out of `/addons/` into a desired folder (project root by default). These can be edited to fit requirements.
+---
 
-### More Documentation
+## MVP Scope
+- 3 locations: House, Museum, Bank
+- About 6 roles to start, with 3 prospects per slot
+- Plan timeline, an execution sim with pause and reassign, the economy, and reputation
 
-[Feature List](/addons/maaacks_game_template/docs/FeatureList.md)  
-[Main Menu Setup](/addons/maaacks_game_template/docs/MainMenuSetup.md)  
-[Options Menu Setup](/addons/maaacks_game_template/docs/OptionsMenuSetup.md)  
-[Game Scene Setup](/addons/maaacks_game_template/docs/GameSceneSetup.md)  
-[Updating Credits](/addons/maaacks_game_template/docs/UpdatingCredits.md)  
-[Blending Music](/addons/maaacks_music_controller/docs/BlendingMusic.md)  
-[Adding UI Sound Effects](/addons/maaacks_ui_sound_controller/docs/AddingUISFX.md)  
-[Loading Scenes](/addons/maaacks_scene_loader/docs/LoadingScenes.md)  
-[Input Icon Mapping](/addons/maaacks_game_template/docs/InputIconMapping.md)  
-[Joypad Inputs](/addons/maaacks_game_template/docs/JoypadInputs.md)  
-[Game Saving](/addons/maaacks_game_template/docs/GameSaving.md)  
-[How Parts Work](/addons/maaacks_game_template/docs/HowPartsWork.md)  
-[Moving Files](/addons/maaacks_game_template/docs/MovingFiles.md)  
-[Uploading to itch.io](/addons/maaacks_game_template/docs/UploadingToItchIo.md)  
-[Build and Publish Your Game Using CICD](/addons/maaacks_game_template/docs/BuildAndPublish.md)  
-[Automatic Updating](/addons/maaacks_game_template/docs/AutomaticUpdating.md)  
-[Exhibiting Your Game](/addons/maaacks_game_template/docs/Exhibiting.md)  
+## Later / Hooks into Core Systems
+- **Funny locations** (zoo, baseball stadium, card shop, Santa's workshop, the Louvre) → new contract templates
+- More locations (post office, mall, lab, restaurant, military base) → contract system
+- Crew badges or rarity tiers → crew system
+- Crew synergies and rivalries → quirks × execution
+- Scouting phase that partially reveals the map → plan system
 
-## Media
-
-### Videos
-
-[![Quick Intro Video](https://img.youtube.com/vi/U9CB3vKINVw/hqdefault.jpg)](https://youtu.be/U9CB3vKINVw)  
-[More Videos](/addons/maaacks_game_template/docs/Videos.md)
-
-### Screenshots
-
-![Main Menu](/addons/maaacks_game_template/media/screenshot-6-main-menu-5.png)  
-![Key Rebinding](/addons/maaacks_game_template/media/screenshot-6-input-list-8.png)  
-![Audio Controls](/addons/maaacks_game_template/media/screenshot-6-audio-options-2.png)  
-[More Screenshots](/addons/maaacks_game_template/docs/Screenshots.md)  
-
-## Featured Games
-
-| HeartFix Express | Baking Godium | Rent Seek Kill |  
-| :-------:| :-------: | :-------: |
-| ![HeartFix Express](/addons/maaacks_game_template/media/thumbnail-game-heartfix-express.png) | ![Baking Godium](/addons/maaacks_game_template/media/thumbnail-game-baking-godium.png) | ![Rent-Seek-Kill](/addons/maaacks_game_template/media/thumbnail-game-rent-seek-kill.png) |
-|  [Find on Steam](https://store.steampowered.com/app/3983290/HeartFix_Express_Demo/)  | [Play on itch.io](https://maaack.itch.io/baking-godium) | [Play on itch.io](https://xandruher.itch.io/rent-seek-kill)  |
-
-
-[All Shared Games](/addons/maaacks_game_template/docs/GamesMade.md)  
-
-
-## Community
-
-Join the [Discord server](https://discord.gg/AyZrJh5AMp) and share your work with others. It's also a space for getting or giving feedback, and asking for help. 
-
-## Links
-[Attribution](/addons/maaacks_game_template/ATTRIBUTION.md)  
-[License](/addons/maaacks_game_template/LICENSE.txt)  
-[Godot Asset Store - Template](https://store.godotengine.org/asset/maaack/maaacks-game-template/)  
-[Godot Asset Store - Addon](https://store.godotengine.org/asset/maaack/maaacks-game-template-addon/)  
-[Godot Asset Library - Template](https://godotengine.org/asset-library/asset/2703)  
-[Godot Asset Library - Plugin](https://godotengine.org/asset-library/asset/2709)  
+## Open Questions
+- Are tasks generated from the map, from a fixed list, or from the crew? (Current proposal: a template per location, with methods based on role.)
+- Final stat list and what each stat does mechanically.
+- Debt structure: fixed total with payments vs endless.
+- Art style: hand-drawn sketchbook (as in the mockups) vs something cleaner.
