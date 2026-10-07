@@ -89,9 +89,9 @@ A run ends when you have no money left. Runs are independent.
 
 ---
 
-##TODO
--List of rooms
--list of task's
--list of roles
--list of stats
--list of quirks
+## TODO
+- List of rooms
+- list of task's
+- list of roles
+- list of stats
+- list of quirks
