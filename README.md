@@ -86,3 +86,12 @@ A run ends when you have no money left. Runs are independent.
 - Final stat list and what each stat does mechanically.
 - Debt structure: fixed total with payments vs endless.
 - Art style: hand-drawn sketchbook (as in the mockups) vs something cleaner.
+
+---
+
+##TODO
+-List of rooms
+-list of task's
+-list of roles
+-list of stats
+-list of quirks
