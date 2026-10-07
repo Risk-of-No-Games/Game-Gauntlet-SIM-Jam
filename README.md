@@ -1,4 +1,4 @@
-# Heist Boss Simulator — One-Page GDD
+# Heistology — One-Page GDD
 
 > **Pitch:** You owe a crime boss money. Pick a heist, hire a crew of randomly generated misfits, plan the job on a timeline, then watch it play out in real time and manage the chaos as it unfolds. FTL-style pause-and-react, RimWorld-style quirks, top-down view.
 
